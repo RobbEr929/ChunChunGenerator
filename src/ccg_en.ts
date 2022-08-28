@@ -94,15 +94,47 @@
         <translation></translation>
     </message>
     <message>
-        <source>Window top hint</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>light</source>
         <translation></translation>
     </message>
     <message>
         <source>dark</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>general</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>window top hint</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>multiline input</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>copy to clipboard when click output view</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>individuation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>theme</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>language</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>shortcut keys</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>only valid for single line input</source>
         <translation></translation>
     </message>
 </context>
@@ -150,6 +182,20 @@
     </message>
     <message>
         <source>add suffix</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>multiline
+input</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>multiline
+output</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>generate</source>
         <translation></translation>
     </message>
 </context>

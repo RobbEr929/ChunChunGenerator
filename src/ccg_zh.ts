@@ -99,7 +99,7 @@
     </message>
     <message>
         <source>copy to clipboard when work over</source>
-        <translation>当完成时自动复制到剪切板</translation>
+        <translation>完成时自动复制到剪切板</translation>
     </message>
     <message>
         <source>minimize to tray when close</source>
@@ -107,7 +107,7 @@
     </message>
     <message>
         <source>Window top hint</source>
-        <translation>置顶窗口</translation>
+        <translation type="vanished">置顶窗口</translation>
     </message>
     <message>
         <source>dark(default)</source>
@@ -120,6 +120,42 @@
     <message>
         <source>dark</source>
         <translation>暗黑</translation>
+    </message>
+    <message>
+        <source>general</source>
+        <translation>常规</translation>
+    </message>
+    <message>
+        <source>window top hint</source>
+        <translation>置顶窗口</translation>
+    </message>
+    <message>
+        <source>multiline input</source>
+        <translation>多行输入</translation>
+    </message>
+    <message>
+        <source>copy to clipboard when click output view</source>
+        <translation>复制点击项到剪切板</translation>
+    </message>
+    <message>
+        <source>individuation</source>
+        <translation>个性化</translation>
+    </message>
+    <message>
+        <source>theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <source>language</source>
+        <translation>语言</translation>
+    </message>
+    <message>
+        <source>shortcut keys</source>
+        <translation>快捷键</translation>
+    </message>
+    <message>
+        <source>only valid for single line input</source>
+        <translation>仅对单行输入剩下</translation>
     </message>
 </context>
 <context>
@@ -179,6 +215,20 @@
     <message>
         <source>add suffix</source>
         <translation>添加后缀</translation>
+    </message>
+    <message>
+        <source>multiline
+input</source>
+        <translation>多行输入</translation>
+    </message>
+    <message>
+        <source>multiline
+output</source>
+        <translation>多行输出</translation>
+    </message>
+    <message>
+        <source>generate</source>
+        <translation>生成</translation>
     </message>
 </context>
 </TS>

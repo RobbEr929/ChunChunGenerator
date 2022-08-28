@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/image">
         <file>ccg_icon.png</file>
+        <file>dlg_info_icon.png</file>
     </qresource>
 </RCC>

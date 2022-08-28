@@ -22,4 +22,15 @@ enum class Theme : int8_t
 const QString defaultPath = ":/qdarkstyle/dark/darkstyle.qss";
 const QString lightPath = ":/qdarkstyle/light/lightstyle.qss";
 
+enum class Action
+{
+    LowerCamelCase,
+    UpperCamelCase,
+    AllLower,
+    AllUpper,
+    FirstUpper,
+    AddUnderline,
+    UnderlineTolerate,
+    Generate,
+};
 #endif // CCG_DEF_H

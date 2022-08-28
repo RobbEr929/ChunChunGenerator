@@ -1,4 +1,4 @@
-/* ---------------------------------------------------------------------------
+﻿/* ---------------------------------------------------------------------------
 
     WARNING! File created programmatically. All changes made in this file will be lost!
 
@@ -1416,9 +1416,7 @@ https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qlineedit
 QLineEdit {
   background-color: #FAFAFA;
   padding-top: 2px;
-  /* This QLineEdit fix  103, 111 */
   padding-bottom: 2px;
-  /* This QLineEdit fix  103, 111 */
   padding-left: 4px;
   padding-right: 4px;
   border-style: solid;

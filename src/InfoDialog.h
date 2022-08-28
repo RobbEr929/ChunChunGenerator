@@ -5,24 +5,23 @@
 #include <QLabel>
 #include <QMutex>
 
-class InfoDialog :
-    public QDialog
+class InfoDialog final
+    : public QDialog
 {
     Q_OBJECT
 public:
-    static void Show(QPoint positon, QSize size, int sec = 3000, QString info = tr("Modify has saved"));
+    static void Show(QWidget *parent = nullptr, int sec = 2000, QString info = tr("Modify has saved"));
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
 
 private:
-    InfoDialog();
-    ~InfoDialog();
-    QLabel* infoLabel;
-    static InfoDialog* dlg;
-    static QMutex mutex;
+    explicit InfoDialog(QWidget *parent = nullptr);
 
+    ~InfoDialog() override;
+
+    QLabel *iconLabel;
+    QLabel *infoLabel;
 };
 
 #endif // CCG_INFODIALOG_H
-
-
-
-

@@ -6,7 +6,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QLineEdit>
 
-class OptionWidget
+class OptionWidget final
 	: public QWidget
 {
 	Q_OBJECT
@@ -15,12 +15,19 @@ public:
 	~OptionWidget() override;
 
 private:
+	QLabel* generalLabel;
 	QCheckBox* pasteWhenGetFocusBox;
 	QCheckBox* copyWhenWorkOverBox;
 	QCheckBox* minimizeWhenCloseBox;
 	QCheckBox* windowTopHintBox;
+	QCheckBox* multilineInput;
+	QCheckBox* copyWhenClickBox;
+	QLabel* individuationLabel;
+	QLabel* themeLabel;
 	QComboBox* themeBox;
+	QLabel* languageLabel;
 	QComboBox* languageBox;
+	QLabel* shortcutLabel;
 	friend class MainWindow;
 };
 

@@ -70,10 +70,11 @@ int main(int argc, char** argv)
 {
     // 默认中文
     int result = 0xff;
-    LoadLog(argc, argv);
     while (result != 0)
     {
         QApplication app(argc, argv);
+
+        LoadLog(argc, argv);
 
         Language language = static_cast<Language>(result);
         

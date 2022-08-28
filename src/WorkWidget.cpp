@@ -1,121 +1,186 @@
 ﻿#include <QKeyEvent>
 #include <QRegExpValidator>
-#include <QtWidgets/QHBoxLayout>
+#include <QTextBlock>
 #include <QStringBuilder>
-
-#include "WorkWidget.h"
-
 #include <QApplication>
 #include <QClipboard>
+#include <QButtonGroup>
+#include <QDebug>
+#include "WorkWidget.h"
 
-WorkWidget::WorkWidget(QWidget* parent)
+WorkWidget::WorkWidget(QWidget *parent)
     : QWidget(parent)
     , inputLabel(new QLabel(tr("input"), this))
     , inputEdit(new QLineEdit(this))
     , outputLabel(new QLabel(tr("output"), this))
     , outputEdit(new QLineEdit(this))
-    , lowerCamelCase(new QPushButton(tr("to lowerCamelCase"), this))
-    , upperCamelCase(new QPushButton(tr("to UpperCamelCase"), this))
-    , addUnderline(new QPushButton(tr("add_underline"), this))
-    , allUpper(new QPushButton(tr("ALL UPPER"),this))
-    , allLower(new QPushButton(tr("all lower"),this))
-    , firstUpper(new QPushButton(tr("First upper"),this))
-    , underlineTolerate(new QCheckBox(tr("UnderlineTolerate"),this))
+    , multiInputLabel(new QLabel(tr("multiline\ninput")))
+    , inputEditArea(new QTextEdit(this))
+    , multiOutputLabel(new QLabel(tr("multiline\noutput")))
+    , outputEditArea(new QListWidget(this))
+    , group(new QButtonGroup(this))
+    , lowerCamelCase(new QRadioButton(tr("to lowerCamelCase"), this))
+    , upperCamelCase(new QRadioButton(tr("to UpperCamelCase"), this))
+    , addUnderline(new QRadioButton(tr("add_underline"), this))
+    , allUpper(new QRadioButton(tr("ALL UPPER"), this))
+    , allLower(new QRadioButton(tr("all lower"), this))
+    , firstUpper(new QRadioButton(tr("First upper"), this))
+    , generateButton(new QPushButton(tr("generate"), this))
+    , underlineTolerate(new QCheckBox(tr("UnderlineTolerate"), this))
     , prefixLabel(new QLabel(tr("add prefix"), this))
     , prefixEdit(new QLineEdit(this))
     , suffixLabel(new QLabel(tr("add suffix"), this))
     , suffixEdit(new QLineEdit(this))
+    , isMultilineInput(false)
     , pasteWhenGetFocus(true)
     , copyWhenWorkOver(true)
+    , copyWhenClick(false)
 {
     setFocusPolicy(Qt::StrongFocus);
 
-    // todo History Record
-    QRegExp regExp("[a-z A-Z 0-9 _]*");
-    auto validator = new QRegExpValidator(regExp, this);
+    QRegExp regExp("[a-zA-Z0-9_]*");
+    validator = new QRegExpValidator(regExp, this);
     inputEdit->setValidator(validator);
-    inputEdit->resize(200, 100);
-
+    inputEdit->setFixedSize(140, 30);
+    outputEdit->setFixedSize(140, 30);
     outputEdit->setReadOnly(true);
 
-    auto hBoxLayout1 = new QHBoxLayout;
+    inputEditArea->setFixedSize(140, 90);
+    outputEditArea->setFixedSize(140, 90);
+
+    prefixEdit->setFixedSize(100, 30);
+    suffixEdit->setFixedSize(100, 30);
+
+    hBoxLayout1 = new QHBoxLayout;
     hBoxLayout1->addStretch(1);
     hBoxLayout1->addWidget(inputLabel);
     hBoxLayout1->addWidget(inputEdit);
     hBoxLayout1->addStretch(1);
 
-    auto hBoxLayout2 = new QHBoxLayout;
+    hBoxLayout2 = new QHBoxLayout;
     hBoxLayout2->addStretch(1);
     hBoxLayout2->addWidget(outputLabel);
     hBoxLayout2->addWidget(outputEdit);
     hBoxLayout2->addStretch(1);
 
-    auto hBoxLayout3 = new QHBoxLayout;
+    hBoxLayout3 = new QHBoxLayout;
     hBoxLayout3->addStretch(1);
-    hBoxLayout3->addWidget(lowerCamelCase);
-    hBoxLayout3->addWidget(upperCamelCase);
-    hBoxLayout3->addWidget(underlineTolerate);
-
+    hBoxLayout3->addWidget(multiInputLabel);
+    hBoxLayout3->addWidget(inputEditArea);
+    hBoxLayout3->addWidget(multiOutputLabel);
+    hBoxLayout3->addWidget(outputEditArea);
     hBoxLayout3->addStretch(1);
+    SetLayoutVisible(hBoxLayout3, false);
 
-    auto hBoxLayout4 = new QHBoxLayout;
+    group->addButton(lowerCamelCase);
+    group->addButton(upperCamelCase);
+    group->addButton(underlineTolerate);
+    group->addButton(allUpper);
+    group->addButton(allLower);
+    group->addButton(firstUpper);
+    group->addButton(addUnderline);
+    group->setExclusive(true);
+
+    generateButton->setFixedHeight(80);
+    auto buttonLayout = new QVBoxLayout;
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(lowerCamelCase);
+    buttonLayout->addWidget(upperCamelCase);
+    buttonLayout->addWidget(allLower);
+    buttonLayout->addWidget(allUpper);
+    buttonLayout->addWidget(firstUpper);
+    buttonLayout->addWidget(addUnderline);
+    buttonLayout->addStretch(1);
+
+    auto prefixLayout = new QHBoxLayout;
+    prefixLayout->addStretch(1);
+    prefixLayout->addWidget(prefixLabel);
+    prefixLayout->addWidget(prefixEdit);
+    prefixLayout->addStretch(1);
+
+    auto suffix = new QHBoxLayout;
+    suffix->addStretch(1);
+    suffix->addWidget(suffixLabel);
+    suffix->addWidget(suffixEdit);
+    suffix->addStretch(1);
+
+    auto fixLayout = new QVBoxLayout;
+    fixLayout->addStretch(1);
+    fixLayout->addWidget(underlineTolerate);
+    fixLayout->addLayout(prefixLayout);
+    fixLayout->addLayout(suffix);
+    fixLayout->addWidget(generateButton);
+    fixLayout->addStretch(1);
+
+    hBoxLayout4 = new QHBoxLayout;
     hBoxLayout4->addStretch(1);
-    hBoxLayout4->addWidget(allLower);
-    hBoxLayout4->addWidget(allUpper);
-    hBoxLayout4->addWidget(firstUpper);
-    hBoxLayout4->addWidget(addUnderline);
+    hBoxLayout4->addLayout(buttonLayout);
+    hBoxLayout4->addLayout(fixLayout);
     hBoxLayout4->addStretch(1);
 
-    
-    auto hBoxLayout5 = new QHBoxLayout;
-    hBoxLayout5->addStretch(1);
-    hBoxLayout5->addWidget(prefixLabel);
-    hBoxLayout5->addWidget(prefixEdit);
-    hBoxLayout5->addWidget(suffixLabel);
-    hBoxLayout5->addWidget(suffixEdit);
-    hBoxLayout5->addStretch(1);
-
-    auto vBoxLayout = new QVBoxLayout;
+    vBoxLayout = new QVBoxLayout(this);
     vBoxLayout->addStretch(1);
     vBoxLayout->addLayout(hBoxLayout1);
     vBoxLayout->addLayout(hBoxLayout2);
-    vBoxLayout->addLayout(hBoxLayout3);
     vBoxLayout->addLayout(hBoxLayout4);
-    vBoxLayout->addLayout(hBoxLayout5);
     vBoxLayout->addStretch(1);
     setLayout(vBoxLayout);
 
-    connect(inputEdit, &QLineEdit::textChanged, this, [this](const QString &str)
-    {
-        nowText = str;
-    });
-    connect(lowerCamelCase, &QPushButton::clicked, this, [this]()
-    {
-            SeparateKey();
-            LowerKey();
-    });
-    connect(upperCamelCase, &QPushButton::clicked, this, [this]()
-    {
-            SeparateKey();
-            UpperKey();
-    });
-    connect(allLower, &QPushButton::clicked, this, [this]()
-    {
-            // todo All Lower
-    });
-    connect(allLower, &QPushButton::clicked, this, [this]()
-    {
-            // todo All Upper
-    });
-    connect(firstUpper, &QPushButton::clicked, this, [this]()
-    {
-            // todo First Upper
-    });
-    connect(addUnderline, &QPushButton::clicked, this, [this]()
-    {
-            SeparateKey();
-            AddUnderlineKey();
-    });
+    connect(generateButton,
+            &QPushButton::clicked,
+            this,
+            [this]()
+            {
+                GetKey();
+                switch (group->checkedId())
+                {
+                case 0:
+                    {
+                        LowerKey();
+                        return;
+                    }
+                case 1:
+                    {
+                        UpperKey();
+                        return;
+                    }
+                case 2:
+                    {
+                        AllLower();
+                        return;
+                    }
+                case 3:
+                    {
+                        AllUpper();
+                        return;
+                    }
+                case 4:
+                    {
+                        FirstUpper();
+                        return;
+                    }
+                case 5:
+                    {
+                        AddUnderline();
+                        return;
+                    }
+                default:
+                    {
+                        DoNothing();
+                    }
+                }
+            });
+
+    connect(outputEditArea,
+            &QListWidget::itemClicked,
+            this,
+            [this](QListWidgetItem *item)
+            {
+                if (copyWhenClick)
+                {
+                    QApplication::clipboard()->setText(item->text());
+                }
+            });
 }
 
 WorkWidget::~WorkWidget()
@@ -126,105 +191,329 @@ void WorkWidget::focusInEvent(QFocusEvent *event)
 {
     if (pasteWhenGetFocus)
     {
-        inputEdit->setText(QApplication::clipboard()->text());
+        if (!isMultilineInput)
+        {
+            QString text = QApplication::clipboard()->text();
+            if (lastResult.compare(text))
+            {
+                inputEdit->setText(text);
+            }
+        }
     }
     QWidget::focusInEvent(event);
 }
 
-void WorkWidget::SeparateKey()
+void WorkWidget::keyPressEvent(QKeyEvent *event)
 {
-    // todo Underline Tolerate
+    if(event->key() >= 0x30 && event->key() <= 0x39
+        || event->key() >= 0x41 && event->key() <= 0x5a
+        || event->key() == 0x5f)
+    {
+        if(!isMultilineInput)
+        {
+            inputEdit->setFocus();
+        }
+        else
+        {
+            inputEditArea->setFocus();
+        }
+    }
+    QWidget::keyPressEvent(event);
+}
 
-    if(nowText.isEmpty())
+void WorkWidget::UpdateInputArea(bool update)
+{
+    isMultilineInput = update;
+    if (update)
+    {
+        SetLayoutVisible(hBoxLayout1, false);
+        SetLayoutVisible(hBoxLayout2, false);
+        SetLayoutVisible(hBoxLayout3, true);
+        auto temp1 = vBoxLayout->itemAt(0);
+        auto temp2 = vBoxLayout->itemAt(1);
+        vBoxLayout->removeItem(temp1);
+        vBoxLayout->removeItem(temp2);
+        vBoxLayout->insertLayout(0, hBoxLayout3);
+        return;
+    }
+
+    SetLayoutVisible(hBoxLayout1, true);
+    SetLayoutVisible(hBoxLayout2, true);
+    SetLayoutVisible(hBoxLayout3, false);
+    auto temp1 = vBoxLayout->itemAt(0);
+    auto temp2 = vBoxLayout->itemAt(1);
+    vBoxLayout->removeItem(temp1);
+    vBoxLayout->removeItem(temp2);
+    vBoxLayout->insertLayout(0, hBoxLayout1);
+    vBoxLayout->insertLayout(1, hBoxLayout2);
+}
+
+void WorkWidget::GetKey()
+{
+    if (isMultilineInput)
+    {
+        if (inputEditArea->document()->isEmpty())
+        {
+            return;
+        }
+        keyVec.clear();
+        for (auto i = 0; i < inputEditArea->document()->lineCount(); ++i)
+        {
+            QString text = inputEditArea->document()->findBlockByLineNumber(i).text();
+            keyVec.push_back(SeparateKey(text));
+        }
+        return;
+    }
+    if (inputEdit->text().isEmpty())
     {
         return;
     }
     keyVec.clear();
-    QString text = nowText;
+    QString text = inputEdit->text();
+    keyVec.push_back(SeparateKey(text));
+}
+
+inline QVector<QString> WorkWidget::SeparateKey(const QString &text)
+{
+    QVector<QString> lineVec;
+
     int start = 0;
     int step = 0;
-
-    QRegExp regExp("[A-Z _ \\s]");
-    while(step != -1)
+    QRegExp regExp;
+    regExp.setPattern("[A-Z_\\s]");
+    while (step != -1)
     {
         step = regExp.indexIn(text, start + 1);
-        QString key = text.mid(start, step == -1 ? -1 : step - start).simplified().remove('_');
+        QString key;
+        if (underlineTolerate->isChecked())
+        {
+            key = text.mid(start, step == -1 ? -1 : step - start).simplified();
+        }
+        else
+        {
+            key = text.mid(start, step == -1 ? -1 : step - start).simplified().remove('_');
+        }
         start = step;
-        if(key.isEmpty())
+        if (key.isEmpty())
         {
             continue;
         }
-        keyVec.push_back(key);
+        lineVec.push_back(key);
     }
+    return lineVec;
 }
 
 void WorkWidget::UpperKey()
 {
     QString text;
-    if(!keyVec.isEmpty() &&!keyVec[0].isEmpty())
+    if (!keyVec.isEmpty())
     {
-        keyVec[0][0] = keyVec[0][0].toUpper();
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            keyVec[i][0][0] = keyVec[i][0][0].toUpper();
+            QString text;
+            for (const auto &j : keyVec[i])
+            {
+                text.append(j);
+            }
+            AddPrefixAndSuffix(text);
+            list.append(text);
+        }
+        SetResult(list);
     }
-    for(const auto& i : keyVec)
-    {
-        text.append(i);
-    }
-    AddPrefixAndSuffix(text);
-    SetResult(text);
 }
 
 void WorkWidget::LowerKey()
 {
     QString text;
-    if (!keyVec.isEmpty() && !keyVec[0].isEmpty())
+    if (!keyVec.isEmpty())
     {
-        keyVec[0][0] = keyVec[0][0].toLower();
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            keyVec[i][0][0] = keyVec[i][0][0].toLower();
+            QString text;
+            for (const auto &j : keyVec[i])
+            {
+                text.append(j);
+            }
+            AddPrefixAndSuffix(text);
+            list.append(text);
+        }
+        SetResult(list);
     }
-    for (const auto& i : keyVec)
-    {
-        text.append(i);
-    }
-    AddPrefixAndSuffix(text);
-    SetResult(text);
 }
 
-void WorkWidget::AddUnderlineKey()
+void WorkWidget::AllUpper()
 {
     QString text;
-    for (const auto& i : keyVec)
+    if (!keyVec.isEmpty())
     {
-        text.append(i % '_');
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            QString text;
+            for (auto &j : keyVec[i])
+            {
+                j = j.toUpper();
+                text.append(j);
+            }
+            AddPrefixAndSuffix(text);
+            list.append(text);
+        }
+        SetResult(list);
     }
-    text = text.mid(0,text.size() - 1);
-    AddPrefixAndSuffix(text);
-    SetResult(text);
+}
+
+void WorkWidget::AllLower()
+{
+    QString text;
+    if (!keyVec.isEmpty())
+    {
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            QString text;
+            for (auto &j : keyVec[i])
+            {
+                j = j.toLower();
+                text.append(j);
+            }
+            AddPrefixAndSuffix(text);
+            list.append(text);
+        }
+        SetResult(list);
+    }
+}
+
+void WorkWidget::FirstUpper()
+{
+    QString text;
+    if (!keyVec.isEmpty())
+    {
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            QString text;
+            for (auto &j : keyVec[i])
+            {
+                j = j.toLower();
+                text.append(j);
+            }
+            text[0] = text[0].toUpper();
+            AddPrefixAndSuffix(text);
+            list.append(text);
+        }
+        SetResult(list);
+    }
+}
+
+void WorkWidget::AddUnderline()
+{
+    QString text;
+    if (!keyVec.isEmpty())
+    {
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            QString text;
+            for (auto &j : keyVec[i])
+            {
+                if (j.at(0) == QChar('_'))
+                {
+                    continue;
+                }
+                text.append(j % '_');
+            }
+            AddPrefixAndSuffix(text);
+            text = text.mid(0, text.size() - 1);
+            list.append(text);
+        }
+        SetResult(list);
+    }
+}
+
+void WorkWidget::DoNothing()
+{
+    QString text;
+    if (!keyVec.isEmpty())
+    {
+        QStringList list;
+        for (auto i = 0; i < keyVec.size(); ++i)
+        {
+            QString text;
+            for (auto &j : keyVec[i])
+            {
+                text.append(j);
+            }
+            AddPrefixAndSuffix(text);
+            text = text.mid(0, text.size() - 1);
+            list.append(text);
+        }
+        SetResult(list);
+    }
 }
 
 void WorkWidget::AddPrefixAndSuffix(QString &str)
 {
-    if(str.isEmpty())
+    if (str.isEmpty())
     {
         return;
     }
-    if(!prefixEdit->text().isEmpty())
+    if (!prefixEdit->text().isEmpty())
     {
         str.prepend(prefixEdit->text());
     }
-    if(!suffixEdit->text().isEmpty())
+    if (!suffixEdit->text().isEmpty())
     {
         str.append(suffixEdit->text());
     }
 }
 
-void WorkWidget::SetResult(const QString& str)
+inline void WorkWidget::SetResult(const QStringList &str)
 {
-    if(str.isEmpty())
+    if (str.isEmpty())
     {
         return;
     }
-    if(copyWhenWorkOver)
+    if (isMultilineInput)
     {
-        QApplication::clipboard()->setText(str);
+        if (copyWhenWorkOver)
+        {
+            QString text;
+            for (const auto &i : str)
+            {
+                text.append(i % "\r\n");
+            }
+            lastResult = text;
+            QApplication::clipboard()->setText(text);
+        }
+        QString text;
+        for (const auto &i : str)
+        {
+            text.append(i);
+        }
+        lastResult = text;
+        outputEditArea->clear();
+        outputEditArea->addItems(str);
+        return;
     }
-    outputEdit->setText(str);
+    if (copyWhenWorkOver)
+    {
+        QApplication::clipboard()->setText(str.at(0));
+    }
+    outputEdit->setText(str.at(0));
+}
+
+void WorkWidget::SetLayoutVisible(QLayout *layout, bool visible)
+{
+    for (auto i = 0; i < layout->count(); ++i)
+    {
+        QWidget *w = layout->itemAt(i)->widget();
+        if (w)
+        {
+            w->setVisible(visible);
+        }
+    }
 }

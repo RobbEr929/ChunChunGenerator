@@ -6,12 +6,11 @@
 #include <QString>
 #include <QMenu>
 #include <QScreen>
+#include <QComboBox>
+#include <QMessageBox>
 #include <QtWidgets/QHBoxLayout>
 
 #include "MainWindow.h"
-
-#include <QComboBox>
-#include <QMessageBox>
 
 #include "easylogging++.h"
 #include "InfoDialog.h"
@@ -91,7 +90,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::focusInEvent(QFocusEvent *event)
 {
-    if(tabWidget->currentIndex()==0)
+    if(tabWidget->currentIndex() == 0)
     {
         workWidget->focusInEvent(event);
     }
@@ -132,7 +131,7 @@ inline bool MainWindow::InitWindow()
         setWindowIcon(QIcon(":/image/ccg_icon.png"));
         move(QApplication::primaryScreen()->availableGeometry().width() - width(), 0);
         setWindowTitle(tr("ChunChunGenerator"));
-        setWindowFlags(windowFlags() & ( Qt::CustomizeWindowHint | ~Qt::WindowMaximizeButtonHint ));
+        setWindowFlags(Qt::Tool | Qt::X11BypassWindowManagerHint);
         SetWindowTopHint(true);
 
         tabWidget->setFixedSize(size());
@@ -214,23 +213,52 @@ bool MainWindow::InitConnect()
             [this](int index)
             {
                 workWidget->pasteWhenGetFocus = index;
+                InfoDialog::Show(this);
             });
+
     connect(optionWidget->copyWhenWorkOverBox,
             &QCheckBox::stateChanged,
             this,
             [this](int index)
             {
                 workWidget->copyWhenWorkOver = index;
+                InfoDialog::Show(this);
             });
+
     connect(optionWidget->windowTopHintBox,
             &QCheckBox::stateChanged,
             this,
             [this](int index)
             {
                 SetWindowTopHint(index);
-                Show();
+                Show(tabWidget->currentIndex());
+                InfoDialog::Show(this);
                 return;
             });
+
+    connect(optionWidget->multilineInput,
+            &QCheckBox::stateChanged,
+            this,
+            [this](int index)
+            {
+                optionWidget->copyWhenClickBox->setEnabled(index);
+                workWidget->UpdateInputArea(index);
+                update();
+                InfoDialog::Show(this);
+                return;
+            });
+
+    connect(optionWidget->copyWhenClickBox,
+            &QCheckBox::stateChanged,
+            this,
+            [this](int index)
+            {
+            workWidget->copyWhenClick = index;
+            InfoDialog::Show(this);
+                return;
+            });
+
+
     connect(optionWidget->themeBox,
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this,
@@ -242,8 +270,10 @@ bool MainWindow::InitConnect()
                     nowTheme = newTheme;
                     setStyleSheet(themeMap[newTheme]);
                     update();
+                    InfoDialog::Show(this);
                 }
             });
+
     connect(optionWidget->languageBox,
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this,
@@ -293,12 +323,15 @@ inline void MainWindow::Show(int index)
 
 void MainWindow::SetWindowTopHint(bool top)
 {
-    if(top)
+    if(top && !(windowFlags() & Qt::WindowStaysOnTopHint))
     {
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
         return;
     }
-    setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+    else if(windowFlags() & Qt::WindowStaysOnTopHint)
+    {
+        setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
+    }
 }
 
 inline Language MainWindow::GetLanguage(int index)
