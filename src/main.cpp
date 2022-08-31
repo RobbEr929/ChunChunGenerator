@@ -1,10 +1,16 @@
-﻿#include <QApplication>
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
 #include <QDir>
-#include <QStringBuilder>
 #include <QTextCodec>
 #include <QTranslator>
-#include <QMessageBox>
-#include "easylogging++.h"
+
+#include "def.h"
 #include "MainWindow.h"
 
 INITIALIZE_EASYLOGGINGPP;
@@ -20,25 +26,25 @@ inline bool LoadTranslate(Language language)
     {
     case Language::Chinese:
         {
-        if (MainWindow::nowLanguage != Language::Chinese && MainWindow::nowLanguage != Language::UnInstall)
-        {
-            qApp->removeTranslator(translateEnglish);
-        }
-        return qApp->installTranslator(translateChinese);
+            if (MainWindow::nowLanguage != Language::Chinese && MainWindow::nowLanguage != Language::UnInstall)
+            {
+                qApp->removeTranslator(translateEnglish);
+            }
+            return qApp->installTranslator(translateChinese);
         }
     case Language::English:
     default:
         {
-        if (MainWindow::nowLanguage != Language::English && MainWindow::nowLanguage != Language::UnInstall)
-        {
-            qApp->removeTranslator(translateChinese);
-        }
-        return qApp->installTranslator(translateEnglish);
+            if (MainWindow::nowLanguage != Language::English && MainWindow::nowLanguage != Language::UnInstall)
+            {
+                qApp->removeTranslator(translateChinese);
+            }
+            return qApp->installTranslator(translateEnglish);
         }
     }
 }
 
-inline void LoadLog(int argc, char** argv)
+inline void LoadLog(int argc, char **argv)
 {
     START_EASYLOGGINGPP(argc, argv);
     QString logPath = QCoreApplication::applicationDirPath() % "/logs";
@@ -66,7 +72,7 @@ inline void LoadLog(int argc, char** argv)
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     // 默认中文
     int result = 0xff;
@@ -76,9 +82,9 @@ int main(int argc, char** argv)
 
         LoadLog(argc, argv);
 
-        Language language = static_cast<Language>(result);
-        
-        if(LoadTranslate(language))
+        auto language = static_cast<Language>(result);
+
+        if (LoadTranslate(language))
         {
             MainWindow::nowLanguage = language;
         }
@@ -87,5 +93,5 @@ int main(int argc, char** argv)
         mainWindow.show();
         result = app.exec();
     }
-	return result;
+    return result;
 }

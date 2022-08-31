@@ -1,11 +1,19 @@
-﻿#include <QKeyEvent>
-#include <QRegExpValidator>
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#include <QLineEdit>
+#include <QKeyEvent>
 #include <QTextBlock>
-#include <QStringBuilder>
-#include <QApplication>
 #include <QClipboard>
 #include <QButtonGroup>
-#include <QDebug>
+#include <QApplication>
+#include <QStringBuilder>
+
 #include "WorkWidget.h"
 
 WorkWidget::WorkWidget(QWidget *parent)
@@ -19,8 +27,8 @@ WorkWidget::WorkWidget(QWidget *parent)
     , multiOutputLabel(new QLabel(tr("multiline\noutput")))
     , outputEditArea(new QListWidget(this))
     , group(new QButtonGroup(this))
-    , lowerCamelCase(new QRadioButton(tr("to lowerCamelCase"), this))
-    , upperCamelCase(new QRadioButton(tr("to UpperCamelCase"), this))
+    , lowerCamelCase(new QRadioButton(tr("lowerCamelCase"), this))
+    , upperCamelCase(new QRadioButton(tr("UpperCamelCase"), this))
     , addUnderline(new QRadioButton(tr("add_underline"), this))
     , allUpper(new QRadioButton(tr("ALL UPPER"), this))
     , allLower(new QRadioButton(tr("all lower"), this))
@@ -37,6 +45,14 @@ WorkWidget::WorkWidget(QWidget *parent)
     , copyWhenClick(false)
 {
     setFocusPolicy(Qt::StrongFocus);
+
+    btnMap[Action::LowerCamelCase] = lowerCamelCase;
+    btnMap[Action::UpperCamelCase] = upperCamelCase;
+    btnMap[Action::AllLower] = allLower;
+    btnMap[Action::AllUpper] = allUpper;
+    btnMap[Action::FirstUpper] = firstUpper;
+    btnMap[Action::AddUnderline] = addUnderline;
+    btnMap[Action::UnderlineTolerate] = underlineTolerate;
 
     QRegExp regExp("[a-zA-Z0-9_]*");
     validator = new QRegExpValidator(regExp, this);
@@ -72,13 +88,12 @@ WorkWidget::WorkWidget(QWidget *parent)
     hBoxLayout3->addStretch(1);
     SetLayoutVisible(hBoxLayout3, false);
 
-    group->addButton(lowerCamelCase);
-    group->addButton(upperCamelCase);
-    group->addButton(underlineTolerate);
-    group->addButton(allUpper);
-    group->addButton(allLower);
-    group->addButton(firstUpper);
-    group->addButton(addUnderline);
+    group->addButton(lowerCamelCase, 0);
+    group->addButton(upperCamelCase, 1);
+    group->addButton(allLower, 2);
+    group->addButton(allUpper, 3);
+    group->addButton(firstUpper, 4);
+    group->addButton(addUnderline, 5);
     group->setExclusive(true);
 
     generateButton->setFixedHeight(80);
@@ -126,54 +141,10 @@ WorkWidget::WorkWidget(QWidget *parent)
     vBoxLayout->addStretch(1);
     setLayout(vBoxLayout);
 
-    connect(generateButton,
-            &QPushButton::clicked,
-            this,
-            [this]()
-            {
-                GetKey();
-                switch (group->checkedId())
-                {
-                case 0:
-                    {
-                        LowerKey();
-                        return;
-                    }
-                case 1:
-                    {
-                        UpperKey();
-                        return;
-                    }
-                case 2:
-                    {
-                        AllLower();
-                        return;
-                    }
-                case 3:
-                    {
-                        AllUpper();
-                        return;
-                    }
-                case 4:
-                    {
-                        FirstUpper();
-                        return;
-                    }
-                case 5:
-                    {
-                        AddUnderline();
-                        return;
-                    }
-                default:
-                    {
-                        DoNothing();
-                    }
-                }
-            });
+    connect(generateButton, &QPushButton::clicked, this, &WorkWidget::Execute);
 
     connect(outputEditArea,
             &QListWidget::itemClicked,
-            this,
             [this](QListWidgetItem *item)
             {
                 if (copyWhenClick)
@@ -185,6 +156,48 @@ WorkWidget::WorkWidget(QWidget *parent)
 
 WorkWidget::~WorkWidget()
 {
+}
+
+void WorkWidget::Execute()
+{
+    GetKey();
+    switch (group->checkedId())
+    {
+    case 0:
+        {
+            LowerKey();
+            return;
+        }
+    case 1:
+        {
+            UpperKey();
+            return;
+        }
+    case 2:
+        {
+            AllLower();
+            return;
+        }
+    case 3:
+        {
+            AllUpper();
+            return;
+        }
+    case 4:
+        {
+            FirstUpper();
+            return;
+        }
+    case 5:
+        {
+            AddUnderline();
+            return;
+        }
+    default:
+        {
+            DoNothing();
+        }
+    }
 }
 
 void WorkWidget::focusInEvent(QFocusEvent *event)
@@ -205,11 +218,11 @@ void WorkWidget::focusInEvent(QFocusEvent *event)
 
 void WorkWidget::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() >= 0x30 && event->key() <= 0x39
+    if (event->key() >= 0x30 && event->key() <= 0x39
         || event->key() >= 0x41 && event->key() <= 0x5a
         || event->key() == 0x5f)
     {
-        if(!isMultilineInput)
+        if (!isMultilineInput)
         {
             inputEdit->setFocus();
         }
@@ -427,7 +440,6 @@ void WorkWidget::AddUnderline()
                 text.append(j % '_');
             }
             AddPrefixAndSuffix(text);
-            text = text.mid(0, text.size() - 1);
             list.append(text);
         }
         SetResult(list);
@@ -448,7 +460,6 @@ void WorkWidget::DoNothing()
                 text.append(j);
             }
             AddPrefixAndSuffix(text);
-            text = text.mid(0, text.size() - 1);
             list.append(text);
         }
         SetResult(list);

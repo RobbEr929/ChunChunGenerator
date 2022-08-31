@@ -1,34 +1,47 @@
-﻿#ifndef CCG_SHORTCUTKEYSMANAGER_H
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#ifndef CCG_SHORTCUTKEYSMANAGER_H
 #define CCG_SHORTCUTKEYSMANAGER_H
-#include <QObject>
-#include <QMap>
-#include <QSet>
+
 #include <QMutex>
 
 #include "def.h"
+#include "ShortcutEdit.h"
+#include "qhotkey.h"
 
-// todo: complete this class
 class ShortcutKeysManager final
     : public QObject
 {
     Q_OBJECT
 public:
-    static ShortcutKeysManager*& GetInstance();
+    static ShortcutKeysManager *&GetInstance();
 
     static void DeleteInstance();
 
-signals:
+    static QPair<qint32, qint32> *RegisterKey(ShortcutEdit *edit, QPair<qint32, qint32> *key, bool del = false);
 
-public slots:
+    static QPair<qint32, qint32> *RegisterKey(ShortcutEdit *edit, QKeySequence *key, bool del = false);
+
+signals:
+    void KeyBind(Action action, QHotkey *key);
 
 private:
-    static ShortcutKeysManager* manager;
+    static ShortcutKeysManager *manager;
     static QMutex mutex;
-    explicit ShortcutKeysManager(QObject* parent = nullptr);
+
+    explicit ShortcutKeysManager(QObject *parent = nullptr);
 
     ~ShortcutKeysManager() override;
 
-    QMap<Action, QSet<QPair<Qt::Key, Qt::Key>>> actionMap;
+    QMap<Action, QObject*> actionMap;
+    QMap<Action, ShortcutEdit*> editMap;
+    QMap<Action, QPair<qint32, qint32>> keyMap;
 };
 
 #endif // CCG_SHORTCUTKEYSMANAGER_H

@@ -1,9 +1,16 @@
-﻿#ifndef CCG_INFODIALOG_H
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#ifndef CCG_INFODIALOG_H
 #define CCG_INFODIALOG_H
 
 #include <QDialog>
 #include <QLabel>
-#include <QMutex>
 
 class InfoDialog final
     : public QDialog

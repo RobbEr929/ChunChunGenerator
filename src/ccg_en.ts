@@ -78,6 +78,10 @@
         <source>Cancel</source>
         <translation></translation>
     </message>
+    <message>
+        <source>welcome to use ChunChunGenerator</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionWidget</name>
@@ -134,7 +138,69 @@
         <translation></translation>
     </message>
     <message>
-        <source>only valid for single line input</source>
+        <source>lowerCamelCase</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>UpperCamelCase</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>all lower</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ALL UPPER</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>First upper</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>add_underline</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>UnderlineTolerate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>generate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>display or not</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>quit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>local shortcut, only works in software</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>global shortcut, works any where</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutEdit</name>
+    <message>
+        <source>Bind success</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bind failed, the shortcuts are already bound</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutKeysManager</name>
+    <message>
+        <source>Bind failed, the shortcuts are already bound</source>
         <translation></translation>
     </message>
 </context>
@@ -146,14 +212,6 @@
     </message>
     <message>
         <source>output</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>to lowerCamelCase</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>to UpperCamelCase</source>
         <translation></translation>
     </message>
     <message>
@@ -196,6 +254,14 @@ output</source>
     </message>
     <message>
         <source>generate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>lowerCamelCase</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>UpperCamelCase</source>
         <translation></translation>
     </message>
 </context>

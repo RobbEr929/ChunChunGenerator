@@ -78,6 +78,10 @@
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
+    <message>
+        <source>welcome to use ChunChunGenerator</source>
+        <translation>欢迎使用淳淳生成器</translation>
+    </message>
 </context>
 <context>
     <name>OptionWidget</name>
@@ -155,7 +159,73 @@
     </message>
     <message>
         <source>only valid for single line input</source>
-        <translation>仅对单行输入剩下</translation>
+        <translation type="vanished">仅对单行输入剩下</translation>
+    </message>
+    <message>
+        <source>lowerCamelCase</source>
+        <translation>小驼峰</translation>
+    </message>
+    <message>
+        <source>UpperCamelCase</source>
+        <translation>大驼峰</translation>
+    </message>
+    <message>
+        <source>all lower</source>
+        <translation>全部小写</translation>
+    </message>
+    <message>
+        <source>ALL UPPER</source>
+        <translation>全部大写</translation>
+    </message>
+    <message>
+        <source>First upper</source>
+        <translation>仅首单词大写</translation>
+    </message>
+    <message>
+        <source>add_underline</source>
+        <translation>添加下划线</translation>
+    </message>
+    <message>
+        <source>UnderlineTolerate</source>
+        <translation>下划线容许</translation>
+    </message>
+    <message>
+        <source>generate</source>
+        <translation>生成</translation>
+    </message>
+    <message>
+        <source>display or not</source>
+        <translation>显示或隐藏</translation>
+    </message>
+    <message>
+        <source>quit</source>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <source>local shortcut, only works in software</source>
+        <translation>本地快捷键，仅在软件中有效</translation>
+    </message>
+    <message>
+        <source>global shortcut, works any where</source>
+        <translation>全局快捷键，任何地方有效</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutEdit</name>
+    <message>
+        <source>Bind success</source>
+        <translation>绑定成功</translation>
+    </message>
+    <message>
+        <source>Bind failed, the shortcuts are already bound</source>
+        <translation>绑定失败，快捷键已被绑定</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutKeysManager</name>
+    <message>
+        <source>Bind failed, the shortcuts are already bound</source>
+        <translation>绑定失败，快捷键已被绑定</translation>
     </message>
 </context>
 <context>
@@ -182,11 +252,11 @@
     </message>
     <message>
         <source>to lowerCamelCase</source>
-        <translation>小驼峰</translation>
+        <translation type="vanished">小驼峰</translation>
     </message>
     <message>
         <source>to UpperCamelCase</source>
-        <translation>大驼峰</translation>
+        <translation type="vanished">大驼峰</translation>
     </message>
     <message>
         <source>add_underline</source>
@@ -229,6 +299,14 @@ output</source>
     <message>
         <source>generate</source>
         <translation>生成</translation>
+    </message>
+    <message>
+        <source>lowerCamelCase</source>
+        <translation>小驼峰</translation>
+    </message>
+    <message>
+        <source>UpperCamelCase</source>
+        <translation>大驼峰</translation>
     </message>
 </context>
 </TS>

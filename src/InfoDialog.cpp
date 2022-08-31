@@ -1,39 +1,56 @@
-﻿#include <QTimer>
-#include <QHBoxLayout>
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#include <QTimer>
 #include <QScreen>
 #include <QPainter>
+#include <QHBoxLayout>
 #include <QApplication>
 
 #include "InfoDialog.h"
 
-void InfoDialog::Show(QWidget* parent, int sec, QString info)
+void InfoDialog::Show(QWidget *parent, int sec, QString info)
 {
-    InfoDialog* dlg = new InfoDialog(parent);
+    auto dlg = new InfoDialog(parent);
     dlg->infoLabel->clear();
     dlg->infoLabel->setText(info);
     dlg->infoLabel->adjustSize();
+    dlg->adjustSize();
 
-    QPoint positon = QPoint(0, 0);
+    auto positon = QPoint(0, 0);
     QSize size = QApplication::primaryScreen()->availableGeometry().size();
-    if(parent)
+
+    if (parent)
     {
-        if(dlg->parent() == nullptr)
+        if (dlg->parent() == nullptr)
         {
             dlg->setParent(parent);
         }
+    }
+
+    if (dlg->parent())
+    {
         positon = parent->pos();
         size = parent->size();
     }
-    positon.setX(positon.x() + (size.width() - dlg->width()) / 2);
-    positon.setY(positon.y() + (size.height() - dlg->height() - 20));
+
+    positon.setX(positon.x() + ( size.width() - dlg->width() ) / 2);
+    positon.setY(positon.y() + ( size.height() - dlg->height() - 20 ));
     dlg->move(positon);
     dlg->show();
     dlg->raise();
-    QTimer::singleShot(sec, dlg, [&dlg]()
-    {
-        dlg->deleteLater();
-        dlg = nullptr;
-    });
+
+    QTimer::singleShot(sec,
+                       dlg,
+                       [dlg]
+                       {
+                           dlg->deleteLater();
+                       });
 }
 
 void InfoDialog::paintEvent(QPaintEvent *event)
@@ -69,7 +86,7 @@ InfoDialog::InfoDialog(QWidget *parent)
     infoLabel->setWordWrap(false);
     infoLabel->setAttribute(Qt::WA_TranslucentBackground);
 
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addStretch(1);
     hLayout->addWidget(iconLabel);
     hLayout->addWidget(infoLabel);

@@ -1,21 +1,31 @@
-﻿#include <QRegExpValidator>
-#include <QFile>
-#include <QMetaObject>
-#include <QClipboard>
-#include <QApplication>
-#include <QString>
+﻿// --------------------------------------------------------------------------------------
+// CopyRight © 2022-2022 ZhongChun All rights reserved
+// Website : RobbEr.ltd
+// Github : github.com/RobbEr929
+// Gitee : gitee.com/robber929
+// 
+// Project : ChunChunGenerator
+// File : MainWindow.cpp
+// 
+// Create On : 2022-08-25 下午 10:06
+// Last Update : 2022-08-31 下午 7:56
+// ---------------------------------------------------------------------------------------
+
 #include <QMenu>
 #include <QScreen>
 #include <QComboBox>
+#include <QClipboard>
 #include <QMessageBox>
-#include <QtWidgets/QHBoxLayout>
+#include <QApplication>
+#include <QGraphicsEffect>
 
 #include "MainWindow.h"
 
-#include "easylogging++.h"
 #include "InfoDialog.h"
+#include "ShortcutKeysManager.h"
 
 Language MainWindow::nowLanguage = Language::UnInstall;
+MainWindow *MainWindow::mainWindow = nullptr;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,7 +33,9 @@ MainWindow::MainWindow(QWidget *parent)
     , workWidget(new WorkWidget(this))
     , optionWidget(new OptionWidget(this))
     , systemTrayIcon(new QSystemTrayIcon(QIcon(":/image/ccg_icon.png"), this))
+    , defocusValue(0.3)
 {
+    mainWindow = this;
     if (!LoadQss())
     {
         LOG(INFO) << tr("Load Qss Failed");
@@ -34,10 +46,19 @@ MainWindow::MainWindow(QWidget *parent)
         LOG(INFO) << tr("Init System Tray Icon Failed");
     }
     InitConnect();
+    InitConfig();
+    InfoDialog::Show(this, 2000, tr("welcome to use ChunChunGenerator"));
+
+    connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::SaveConfig);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+MainWindow *&MainWindow::GetInstance()
+{
+    return mainWindow;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -46,10 +67,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (firstClose && !optionWidget->minimizeWhenCloseBox->isChecked())
     {
         QMessageBox box(QMessageBox::Information,
-            tr("Confirm to quit?"),
-            tr(
-                "confirm exit? Click \'Yes\' to exit, click \'No\' to minimize to tray, click \'Cancel\' to close the dialog"),
-            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+                        tr("Confirm to quit?"),
+                        tr(
+                            "confirm exit? Click \'Yes\' to exit, click \'No\' to minimize to tray, click \'Cancel\' to close the dialog"),
+                        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         box.setButtonText(QMessageBox::Yes, tr("Yes"));
         box.setButtonText(QMessageBox::No, tr("No"));
         box.setButtonText(QMessageBox::Cancel, tr("Cancel"));
@@ -90,11 +111,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::focusInEvent(QFocusEvent *event)
 {
-    if(tabWidget->currentIndex() == 0)
+    if (tabWidget->currentIndex() == 0)
     {
         workWidget->focusInEvent(event);
     }
     QMainWindow::focusInEvent(event);
+}
+
+void MainWindow::enterEvent(QEvent *event)
+{
+    setWindowOpacity(1);
+    QMainWindow::enterEvent(event);
+}
+
+void MainWindow::leaveEvent(QEvent *event)
+{
+    setWindowOpacity(defocusValue);
+    QMainWindow::leaveEvent(event);
 }
 
 inline bool MainWindow::LoadQss()
@@ -153,17 +186,17 @@ inline bool MainWindow::InitSystemTrayIcon()
     {
         auto trayMenu = new QMenu(this);
         trayMenu->addAction(tr("Open the main tab"),
-                            [this]()
+                            [this]
                             {
                                 Show();
                             });
         trayMenu->addAction(tr("Open the Option tab"),
-                            [this]()
+                            [this]
                             {
                                 Show(1);
                             });
         trayMenu->addAction(tr("Exit"),
-                            [this]()
+                            [this]
                             {
                                 qApp->exit(0);
                             });
@@ -233,7 +266,6 @@ bool MainWindow::InitConnect()
                 SetWindowTopHint(index);
                 Show(tabWidget->currentIndex());
                 InfoDialog::Show(this);
-                return;
             });
 
     connect(optionWidget->multilineInput,
@@ -245,7 +277,6 @@ bool MainWindow::InitConnect()
                 workWidget->UpdateInputArea(index);
                 update();
                 InfoDialog::Show(this);
-                return;
             });
 
     connect(optionWidget->copyWhenClickBox,
@@ -253,13 +284,19 @@ bool MainWindow::InitConnect()
             this,
             [this](int index)
             {
-            workWidget->copyWhenClick = index;
-            InfoDialog::Show(this);
-                return;
+                workWidget->copyWhenClick = index;
+                InfoDialog::Show(this);
             });
 
+    connect(qobject_cast<QSlider*>(optionWidget->defocusWidget->Object()),
+            &QSlider::valueChanged,
+            this,
+            [this](int value)
+            {
+                defocusValue = value / 100.0;
+            });
 
-    connect(optionWidget->themeBox,
+    connect(qobject_cast<QComboBox*>(optionWidget->themeWidget->Object()),
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this,
             [this](int index)
@@ -274,7 +311,7 @@ bool MainWindow::InitConnect()
                 }
             });
 
-    connect(optionWidget->languageBox,
+    connect(qobject_cast<QComboBox*>(optionWidget->languageWidget->Object()),
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this,
             [this](int index)
@@ -284,7 +321,8 @@ bool MainWindow::InitConnect()
                 {
                     QMessageBox box(QMessageBox::Information,
                                     tr("Confirm to modify the language?"),
-                                    tr("Confirm to modify the language? After modification, it will restart automatically"),
+                                    tr(
+                                        "Confirm to modify the language? After modification, it will restart automatically"),
                                     QMessageBox::Yes | QMessageBox::No);
                     box.setButtonText(QMessageBox::Yes, tr("Yes"));
                     box.setButtonText(QMessageBox::No, tr("No"));
@@ -293,9 +331,175 @@ bool MainWindow::InitConnect()
                     {
                         qApp->exit(static_cast<int>(language));
                     }
-                    optionWidget->languageBox->setCurrentIndex(index == 0 ? 1 : 0);
+                    qobject_cast<QComboBox*>(optionWidget->languageWidget->Object())->setCurrentIndex(
+                        index == 0 ? 1 : 0);
                 }
             });
+
+    connect(ShortcutKeysManager::GetInstance(),
+            &ShortcutKeysManager::KeyBind,
+            this,
+            [this](Action action, QHotkey *key)
+            {
+                switch (action)
+                {
+                case Action::Generate:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    QString text = QApplication::clipboard()->text();
+                                    if (workWidget->validator->regExp().exactMatch(text))
+                                    {
+                                        workWidget->inputEdit->setText(text);
+                                        workWidget->Execute();
+                                    }
+                                });
+                        break;
+                    }
+                case Action::DisplayOrNot:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (isVisible())
+                                    {
+                                        hide();
+                                        return;
+                                    }
+                                    Show();
+                                });
+                        break;
+                    }
+                case Action::Quit:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    qApp->exit(0);
+                                });
+                        break;
+                    }
+                case Action::UNKNOWN:
+                    {
+                        break;
+                    }
+                case Action::LowerCamelCase:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->lowerCamelCase->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::UpperCamelCase:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->upperCamelCase->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::AllLower:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->allLower->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::AllUpper:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->allUpper->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::FirstUpper:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->firstUpper->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::AddUnderline:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->addUnderline->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                case Action::UnderlineTolerate:
+                    {
+                        connect(key,
+                                &QHotkey::activated,
+                                this,
+                                [this]
+                                {
+                                    if (workWidget->hasFocus())
+                                    {
+                                        workWidget->underlineTolerate->setChecked(true);
+                                    }
+                                });
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+                }
+            });
+    return true;
+}
+
+bool MainWindow::InitConfig()
+{
+    optionWidget->ReadConfig();
     return true;
 }
 
@@ -313,6 +517,7 @@ inline void MainWindow::Show(int index)
         return;
     }
     tabWidget->setCurrentIndex(0);
+    workWidget->inputEdit->setFocus();
     if (isVisible())
     {
         activateWindow();
@@ -323,12 +528,12 @@ inline void MainWindow::Show(int index)
 
 void MainWindow::SetWindowTopHint(bool top)
 {
-    if(top && !(windowFlags() & Qt::WindowStaysOnTopHint))
+    if (top && !( windowFlags() & Qt::WindowStaysOnTopHint ))
     {
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
         return;
     }
-    else if(windowFlags() & Qt::WindowStaysOnTopHint)
+    if (windowFlags() & Qt::WindowStaysOnTopHint)
     {
         setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);
     }
@@ -341,4 +546,10 @@ inline Language MainWindow::GetLanguage(int index)
         return Language::Chinese;
     }
     return Language::English;
+}
+
+void MainWindow::SaveConfig()
+{
+    optionWidget->SaveConfig();
+    optionWidget->configReader->WriteConfig();
 }

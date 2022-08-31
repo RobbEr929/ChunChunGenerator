@@ -1,15 +1,24 @@
-﻿#ifndef CCG_WORKWIDGET_H
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#ifndef CCG_WORKWIDGET_H
 #define CCG_WORKWIDGET_H
-#include <QCheckBox>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QListWidget>
-#include <QWidget>
+
 #include <QLabel>
-#include <QLineEdit>
-#include <QRadioButton>
-#include <QPushButton>
+#include <QWidget>
 #include <QTextEdit>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QListWidget>
+#include <QRadioButton>
+
+#include "def.h"
 
 class WorkWidget final
     : public QWidget
@@ -20,10 +29,13 @@ public:
 
     ~WorkWidget() override;
 
+    void Execute();
+
 protected:
     void focusInEvent(QFocusEvent *event) override;
 
     void keyPressEvent(QKeyEvent *event) override;
+
 private:
     void UpdateInputArea(bool update);
 
@@ -86,6 +98,7 @@ private:
     bool copyWhenClick;
     bool isFocus;
     friend class MainWindow;
+    QMap<Action, QAbstractButton*> btnMap;
 };
 
 #endif // CCG_WORKWIDGET_H

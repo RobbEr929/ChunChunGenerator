@@ -1,34 +1,57 @@
-﻿#ifndef CCG_OPTIONWIDGET_H
+﻿// /* ---------------------------------------------------------------------------------------
+//  * CopyRight © 2022-2022 ZhongChun All rights reserved
+//  * Website : RobbEr.ltd
+//  * Github : github.com/RobbEr929
+//  * Gitee : gitee.com/robber929
+//  * ---------------------------------------------------------------------------------------
+//  */
+
+#ifndef CCG_OPTIONWIDGET_H
 #define CCG_OPTIONWIDGET_H
 
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QLineEdit>
+#include <QWidget>
+#include <QCheckBox>
+#include <QTabWidget>
+#include <QScrollArea>
+#include <QRadioButton>
+
+#include "def.h"
+#include "ConfigReader.h"
+#include "TitleWidget.h"
 
 class OptionWidget final
-	: public QWidget
+    : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit OptionWidget(QWidget* parent = nullptr);
-	~OptionWidget() override;
+    explicit OptionWidget(QWidget *parent = nullptr);
+
+    ~OptionWidget() override;
+
+    void ReadConfig() const;
+
+    void SaveConfig() const;
 
 private:
-	QLabel* generalLabel;
-	QCheckBox* pasteWhenGetFocusBox;
-	QCheckBox* copyWhenWorkOverBox;
-	QCheckBox* minimizeWhenCloseBox;
-	QCheckBox* windowTopHintBox;
-	QCheckBox* multilineInput;
-	QCheckBox* copyWhenClickBox;
-	QLabel* individuationLabel;
-	QLabel* themeLabel;
-	QComboBox* themeBox;
-	QLabel* languageLabel;
-	QComboBox* languageBox;
-	QLabel* shortcutLabel;
-	friend class MainWindow;
+    QWidget *InitGeneralWidget();
+
+    QWidget *InitIndividuationWidget();
+
+    QWidget *InitShortcutWidget();
+
+    QTabWidget *optionTabWidget;
+    QCheckBox *pasteWhenGetFocusBox;
+    QCheckBox *copyWhenWorkOverBox;
+    QCheckBox *minimizeWhenCloseBox;
+    QCheckBox *windowTopHintBox;
+    QCheckBox *multilineInput;
+    QCheckBox *copyWhenClickBox;
+    QScrollArea *shortcutArea;
+    TitleWidget * defocusWidget,*themeWidget, *languageWidget, *localWidget, *lccWdiget, *uccWidget, *alWidget, *auWdiget, *fuWidget, *
+                aulWidget
+                , *ultWidget, *globalWidget, *gWdiget, *dWidget, *qWidget;
+    ConfigReader *configReader;
+    friend class MainWindow;
 };
 
 #endif // CCG_OPTIONWIDGET_H
