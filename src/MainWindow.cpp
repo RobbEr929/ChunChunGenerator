@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     , tabWidget(new QTabWidget(this))
     , workWidget(new WorkWidget(this))
     , optionWidget(new OptionWidget(this))
+    , aboutWidget(new AboutWidget(this))
     , systemTrayIcon(new QSystemTrayIcon(QIcon(":/image/ccg_icon.png"), this))
     , defocusValue(0.3)
 {
@@ -170,6 +171,7 @@ inline bool MainWindow::InitWindow()
         tabWidget->setFixedSize(size());
         tabWidget->addTab(workWidget, tr("Generator"));
         tabWidget->addTab(optionWidget, tr("Option"));
+        tabWidget->addTab(aboutWidget, tr("About"));
         tabWidget->tabBar()->setMinimumWidth(size().width() * 0.5);
     }
     catch (std::bad_alloc)

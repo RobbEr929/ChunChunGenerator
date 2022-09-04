@@ -2,6 +2,37 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>AboutWidget</name>
+    <message>
+        <source>ChunChunGenerator</source>
+        <translation>淳淳生成器</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>版本</translation>
+    </message>
+    <message>
+        <source>about help</source>
+        <translation type="obsolete">帮助</translation>
+    </message>
+    <message>
+        <source>get help</source>
+        <translation>获取帮助</translation>
+    </message>
+    <message>
+        <source>/../ReadMe.md</source>
+        <translation>/../ReadMe_ZH.md</translation>
+    </message>
+    <message>
+        <source>https://robber.ltd/2022/09/04/chunchungenerator-help/</source>
+        <translation>https://robber.ltd/2022/09/04/chunchungenerator-help-zh/</translation>
+    </message>
+    <message>
+        <source>:/help/ChunChunGenerator-Help.md</source>
+        <translation type="vanished">:/help/ChunChunGenerator-Help-ZH.md</translation>
+    </message>
+</context>
+<context>
     <name>InfoDialog</name>
     <message>
         <source>Modify has saved</source>
@@ -81,6 +112,10 @@
     <message>
         <source>welcome to use ChunChunGenerator</source>
         <translation>欢迎使用淳淳生成器</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>关于</translation>
     </message>
 </context>
 <context>
@@ -203,10 +238,26 @@
     </message>
     <message>
         <source>local shortcut, only works in software</source>
-        <translation>本地快捷键，仅在软件中有效</translation>
+        <translation type="vanished">本地快捷键，仅在软件中有效</translation>
     </message>
     <message>
         <source>global shortcut, works any where</source>
+        <translation type="vanished">全局快捷键，任何地方有效</translation>
+    </message>
+    <message>
+        <source>Defocus Transparency(%)</source>
+        <translation type="vanished">虚焦透明度(%)</translation>
+    </message>
+    <message>
+        <source>defocus transparency(%)</source>
+        <translation>虚焦透明度(%)</translation>
+    </message>
+    <message>
+        <source>local shortcut keys, only works in software</source>
+        <translation>本地快捷键，仅在软件中有效</translation>
+    </message>
+    <message>
+        <source>global shortcut keys, works any where</source>
         <translation>全局快捷键，任何地方有效</translation>
     </message>
 </context>

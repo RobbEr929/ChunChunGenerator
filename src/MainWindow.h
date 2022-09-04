@@ -15,6 +15,7 @@
 #include "def.h"
 #include "WorkWidget.h"
 #include "OptionWidget.h"
+#include "AboutWidget.h"
 
 class MainWindow final
     : public QMainWindow
@@ -60,6 +61,7 @@ private:
     QTabWidget *tabWidget;
     WorkWidget *workWidget;
     OptionWidget *optionWidget;
+    AboutWidget* aboutWidget;
     QSystemTrayIcon *systemTrayIcon;
     Theme nowTheme;
     double defocusValue;

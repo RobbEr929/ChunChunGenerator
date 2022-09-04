@@ -105,6 +105,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <QtMoc Include="AboutWidget.h" />
     <ClInclude Include="easylogging++.h" />
     <QtMoc Include="ConfigReader.h" />
     <ClInclude Include="def.h" />
@@ -117,6 +118,7 @@
     <QtMoc Include="WorkWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AboutWidget.cpp" />
     <ClCompile Include="ConfigReader.cpp" />
     <ClCompile Include="easylogging++.cc" />
     <ClCompile Include="InfoDialog.cpp" />

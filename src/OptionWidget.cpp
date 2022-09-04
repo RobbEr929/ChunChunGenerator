@@ -14,7 +14,7 @@ OptionWidget::OptionWidget(QWidget* parent)
     , windowTopHintBox(new QCheckBox(tr("window top hint"),this))
     , multilineInput(new QCheckBox(tr("multiline input"),this))
     , copyWhenClickBox(new QCheckBox(tr("copy to clipboard when click output view"),this))
-    , defocusWidget(new TitleWidget(tr("Defocus Transparency(%)"),new QSlider(Qt::Horizontal, this), this))
+    , defocusWidget(new TitleWidget(tr("defocus transparency(%)"),new QSlider(Qt::Horizontal, this), this))
     , themeWidget(new TitleWidget(tr("theme"),new QComboBox(this), this))
     , languageWidget(new TitleWidget(tr("language"), new QComboBox(this), this))
     , shortcutArea(new QScrollArea)
@@ -166,14 +166,14 @@ QWidget * OptionWidget::InitShortcutWidget()
 	frame1->setLineWidth(3);
 	frame1->setFrameShadow(QFrame::Plain);
 	frame1->setFixedWidth(100);
-	localWidget = new TitleWidget(tr("local shortcut, only works in software"), frame1, this);
+	localWidget = new TitleWidget(tr("local shortcut keys, only works in software"), frame1, this);
 
 	QFrame* frame2 = new QFrame(this);
 	frame2->setFrameShape(QFrame::HLine);
 	frame2->setLineWidth(3);
 	frame2->setFrameShadow(QFrame::Plain);
 	frame2->setFixedWidth(100);
-	globalWidget = new TitleWidget(tr("global shortcut, works any where"), frame2,this);
+	globalWidget = new TitleWidget(tr("global shortcut keys, works any where"), frame2,this);
 
 	QWidget* shortcutWidget = new QWidget(this);
 	shortcutWidget->setFixedSize(560, 240);

@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en">
 <context>
+    <name>AboutWidget</name>
+    <message>
+        <source>ChunChunGenerator</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>get help</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>https://robber.ltd/2022/09/04/chunchungenerator-help/</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>/../ReadMe.md</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoDialog</name>
     <message>
         <source>Modify has saved</source>
@@ -80,6 +103,10 @@
     </message>
     <message>
         <source>welcome to use ChunChunGenerator</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>About</source>
         <translation></translation>
     </message>
 </context>
@@ -178,11 +205,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>local shortcut, only works in software</source>
+        <source>defocus transparency(%)</source>
         <translation></translation>
     </message>
     <message>
-        <source>global shortcut, works any where</source>
+        <source>local shortcut keys, only works in software</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>global shortcut keys, works any where</source>
         <translation></translation>
     </message>
 </context>

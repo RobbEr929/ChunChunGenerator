@@ -1,10 +1,15 @@
-﻿// /* ---------------------------------------------------------------------------------------
-//  * CopyRight © 2022-2022 ZhongChun All rights reserved
-//  * Website : RobbEr.ltd
-//  * Github : github.com/RobbEr929
-//  * Gitee : gitee.com/robber929
-//  * ---------------------------------------------------------------------------------------
-//  */
+﻿// --------------------------------------------------------------------------------------
+// CopyRight © 2022-2022 ZhongChun All rights reserved
+// Website : RobbEr.ltd
+// Github : github.com/RobbEr929
+// Gitee : gitee.com/robber929
+// 
+// Project : ChunChunGenerator
+// File : WorkWidget.cpp
+// 
+// Create On : 2022-08-25 下午 10:06
+// Last Update : 2022-09-04 下午 3:43
+// ---------------------------------------------------------------------------------------
 
 #include <QLineEdit>
 #include <QKeyEvent>
@@ -43,6 +48,7 @@ WorkWidget::WorkWidget(QWidget *parent)
     , pasteWhenGetFocus(true)
     , copyWhenWorkOver(true)
     , copyWhenClick(false)
+    , regExp("[0-9a-zA-Z_\\s]*")
 {
     setFocusPolicy(Qt::StrongFocus);
 
@@ -54,7 +60,6 @@ WorkWidget::WorkWidget(QWidget *parent)
     btnMap[Action::AddUnderline] = addUnderline;
     btnMap[Action::UnderlineTolerate] = underlineTolerate;
 
-    QRegExp regExp("[a-zA-Z0-9_]*");
     validator = new QRegExpValidator(regExp, this);
     inputEdit->setValidator(validator);
     inputEdit->setFixedSize(140, 30);
@@ -209,7 +214,11 @@ void WorkWidget::focusInEvent(QFocusEvent *event)
             QString text = QApplication::clipboard()->text();
             if (lastResult.compare(text))
             {
-                inputEdit->setText(text);
+                if(regExp.exactMatch(text))
+                {
+                    inputEdit->setText(text);
+                    return;
+                }
             }
         }
     }
@@ -292,11 +301,10 @@ inline QVector<QString> WorkWidget::SeparateKey(const QString &text)
 
     int start = 0;
     int step = 0;
-    QRegExp regExp;
-    regExp.setPattern("[A-Z_\\s]");
+    QRegExp exp("[A-Z_\\s]");
     while (step != -1)
     {
-        step = regExp.indexIn(text, start + 1);
+        step = exp.indexIn(text, start == 0?start:start + 1);
         QString key;
         if (underlineTolerate->isChecked())
         {
@@ -324,7 +332,10 @@ void WorkWidget::UpperKey()
         QStringList list;
         for (auto i = 0; i < keyVec.size(); ++i)
         {
-            keyVec[i][0][0] = keyVec[i][0][0].toUpper();
+            for (auto& j : keyVec[i])
+            {
+                j = UpperOne(j);
+            }
             QString text;
             for (const auto &j : keyVec[i])
             {
@@ -345,7 +356,11 @@ void WorkWidget::LowerKey()
         QStringList list;
         for (auto i = 0; i < keyVec.size(); ++i)
         {
-            keyVec[i][0][0] = keyVec[i][0][0].toLower();
+            keyVec[i][0] = keyVec[i][0].toLower();
+            for (auto j = 1; j < keyVec[i].size(); ++j)
+            {
+                keyVec[i][j] = UpperOne(keyVec[i][j]);
+            }
             QString text;
             for (const auto &j : keyVec[i])
             {
@@ -433,12 +448,9 @@ void WorkWidget::AddUnderline()
             QString text;
             for (auto &j : keyVec[i])
             {
-                if (j.at(0) == QChar('_'))
-                {
-                    continue;
-                }
                 text.append(j % '_');
             }
+            text = text.mid(0, text.size() - 1);
             AddPrefixAndSuffix(text);
             list.append(text);
         }
@@ -464,6 +476,23 @@ void WorkWidget::DoNothing()
         }
         SetResult(list);
     }
+}
+
+QString WorkWidget::UpperOne(const QString &str)
+{
+    QString newStr = str.toLower();
+    qint8 pos = 0;
+    while (!( newStr[pos] >= 'a' && newStr[pos] <= 'z'
+        || newStr[pos] >= 'A' && newStr[pos] <= 'Z' ))
+    {
+        if (pos >= newStr.size())
+        {
+            return newStr;
+        }
+        ++pos;
+    }
+    newStr[pos] = newStr[pos].toUpper();
+    return newStr;
 }
 
 void WorkWidget::AddPrefixAndSuffix(QString &str)
