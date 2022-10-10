@@ -32,12 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>5.12.10_msvc2017_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;concurrent</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.12.10_msvc2017_64</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;concurrent</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -105,6 +105,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <QtMoc Include="wordninga.h" />
     <QtMoc Include="AboutWidget.h" />
     <ClInclude Include="easylogging++.h" />
     <QtMoc Include="ConfigReader.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="ShortcutEdit.cpp" />
     <ClCompile Include="ShortcutKeysManager.cpp" />
     <ClCompile Include="TitleWidget.cpp" />
+    <ClCompile Include="wordninga.cpp" />
     <ClCompile Include="WorkWidget.cpp" />
   </ItemGroup>
   <ItemGroup>

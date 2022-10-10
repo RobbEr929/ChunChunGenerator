@@ -24,10 +24,16 @@ OptionWidget::OptionWidget(QWidget* parent)
     , auWdiget(new TitleWidget(tr("ALL UPPER"),new ShortcutEdit(Action::AllUpper),this))
     , fuWidget(new TitleWidget(tr("First upper"),new ShortcutEdit(Action::FirstUpper),this))
     , aulWidget(new TitleWidget(tr("add_underline"),new ShortcutEdit(Action::AddUnderline),this))
-    , ultWidget(new TitleWidget(tr("UnderlineTolerate"),new ShortcutEdit(Action::UnderlineTolerate),this))
     , gWdiget(new TitleWidget(tr("generate"),new ShortcutEdit(Action::Generate),this))
     , dWidget(new TitleWidget(tr("display or not"),new ShortcutEdit(Action::DisplayOrNot),this))
     , qWidget(new TitleWidget(tr("quit"),new ShortcutEdit(Action::Quit),this))
+    , useDictionaryBox(new QCheckBox(tr("enable dictionary segmentation"),this))
+    , awtdLabel(new QLabel(tr("add word to dictionary"),this))
+    , awtdEdit(new QLineEdit(this))
+    , awtdButton(new QPushButton(tr("add"),this))
+    , rwtdLabel(new QLabel(tr("remove word to dictionary"),this))
+	, rwtdEdit(new QLineEdit(this))
+	, rwtdButton(new QPushButton(tr("remove"), this))
     , configReader(new ConfigReader(this))
 {
 	setFixedSize(parent->size());
@@ -36,6 +42,7 @@ OptionWidget::OptionWidget(QWidget* parent)
 	optionTabWidget->addTab(InitGeneralWidget(), tr("general"));
 	optionTabWidget->addTab(InitIndividuationWidget(), tr("individuation"));
 	optionTabWidget->addTab(InitShortcutWidget(), tr("shortcut keys"));
+	optionTabWidget->addTab(InitDictionaryWidget(), tr("word segmentation"));
 	optionTabWidget->setCurrentIndex(0);
 }
 
@@ -69,10 +76,6 @@ void OptionWidget::ReadConfig() const
 	{
 		qobject_cast<ShortcutEdit*>(aulWidget->Object())->RegiserKey(configReader->GetValue(aulWidget->Object()->objectName()));
 	}
-	if (!configReader->GetValue(ultWidget->Object()->objectName()).isEmpty())
-	{
-		qobject_cast<ShortcutEdit*>(ultWidget->Object())->RegiserKey(configReader->GetValue(ultWidget->Object()->objectName()));
-	}
 	if (!configReader->GetValue(gWdiget->Object()->objectName()).isEmpty())
 	{
 		qobject_cast<ShortcutEdit*>(gWdiget->Object())->RegiserKey(configReader->GetValue(gWdiget->Object()->objectName()));
@@ -95,7 +98,6 @@ void OptionWidget::SaveConfig() const
 	configReader->SetValue(auWdiget->Object()->objectName(), qobject_cast<ShortcutEdit*>(auWdiget->Object())->text());
 	configReader->SetValue(fuWidget->Object()->objectName(), qobject_cast<ShortcutEdit*>(fuWidget->Object())->text());
 	configReader->SetValue(aulWidget->Object()->objectName(), qobject_cast<ShortcutEdit*>(aulWidget->Object())->text());
-	configReader->SetValue(ultWidget->Object()->objectName(), qobject_cast<ShortcutEdit*>(ultWidget->Object())->text());
 	configReader->SetValue(gWdiget->Object()->objectName(), qobject_cast<ShortcutEdit*>(gWdiget->Object())->text());
 	configReader->SetValue(dWidget->Object()->objectName(), qobject_cast<ShortcutEdit*>(dWidget->Object())->text());
 	configReader->SetValue(qWidget->Object()->objectName(), qobject_cast<ShortcutEdit*>(qWidget->Object())->text());
@@ -188,7 +190,6 @@ QWidget * OptionWidget::InitShortcutWidget()
 	shortcutContentLayout->addWidget(auWdiget);
 	shortcutContentLayout->addWidget(fuWidget); 
 	shortcutContentLayout->addWidget(aulWidget);
-	shortcutContentLayout->addWidget(ultWidget);
 	shortcutContentLayout->addWidget(globalWidget);
 	shortcutContentLayout->addWidget(gWdiget);
 	shortcutContentLayout->addWidget(dWidget);
@@ -204,4 +205,39 @@ QWidget * OptionWidget::InitShortcutWidget()
 
 	return shortcutWidget;
 
+}
+
+QWidget * OptionWidget::InitDictionaryWidget()
+{
+	useDictionaryBox->setToolTip(tr("use the dictionary for word segmentation when on. use simple word segmentation when off."));
+	useDictionaryBox->setChecked(true);
+
+	QHBoxLayout* awtdLayout = new QHBoxLayout;
+	awtdLayout->addStretch(1);
+	awtdLayout->addWidget(awtdLabel);
+	awtdLayout->addWidget(awtdEdit);
+	awtdLayout->addWidget(awtdButton);
+	awtdLayout->addStretch(1);
+
+	QHBoxLayout* rwtdLayout = new QHBoxLayout;
+	rwtdLayout->addStretch(1);
+	rwtdLayout->addWidget(rwtdLabel);
+	rwtdLayout->addWidget(rwtdEdit);
+	rwtdLayout->addWidget(rwtdButton);
+	rwtdLayout->addStretch(1);
+
+    QWidget* dictionaryWidget = new QWidget(this);
+	dictionaryWidget->setFixedSize(560, 240);
+
+	QVBoxLayout* dictionaryLayout = new QVBoxLayout;
+	dictionaryLayout->setContentsMargins(140, 20, 140, 20);
+	dictionaryLayout->addStretch(1);
+	dictionaryLayout->addWidget(useDictionaryBox);
+	dictionaryLayout->addLayout(awtdLayout);
+	dictionaryLayout->addLayout(rwtdLayout);
+	dictionaryLayout->addStretch(1);
+
+	dictionaryWidget->setLayout(dictionaryLayout);
+
+	return dictionaryWidget;
 }

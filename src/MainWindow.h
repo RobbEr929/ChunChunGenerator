@@ -26,6 +26,8 @@ public:
 
     ~MainWindow() override;
 
+    std::function<void()> SlotFunction(Action act);
+    
     static MainWindow *&GetInstance();
 
     static Language nowLanguage;
@@ -65,6 +67,7 @@ private:
     QSystemTrayIcon *systemTrayIcon;
     Theme nowTheme;
     double defocusValue;
+    QMap<Action, std::function<void()>> slotFunction;
 
     static MainWindow *mainWindow;
 };

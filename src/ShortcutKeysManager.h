@@ -28,9 +28,6 @@ public:
 
     static QPair<qint32, qint32> *RegisterKey(ShortcutEdit *edit, QKeySequence *key, bool del = false);
 
-signals:
-    void KeyBind(Action action, QHotkey *key);
-
 private:
     static ShortcutKeysManager *manager;
     static QMutex mutex;

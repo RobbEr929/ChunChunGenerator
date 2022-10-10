@@ -18,8 +18,10 @@
 #include <QButtonGroup>
 #include <QApplication>
 #include <QStringBuilder>
-
+#include <QtConcurrent/QtConcurrent>
 #include "WorkWidget.h"
+
+#include <QThread>
 
 WorkWidget::WorkWidget(QWidget *parent)
     : QWidget(parent)
@@ -39,7 +41,6 @@ WorkWidget::WorkWidget(QWidget *parent)
     , allLower(new QRadioButton(tr("all lower"), this))
     , firstUpper(new QRadioButton(tr("First upper"), this))
     , generateButton(new QPushButton(tr("generate"), this))
-    , underlineTolerate(new QCheckBox(tr("UnderlineTolerate"), this))
     , prefixLabel(new QLabel(tr("add prefix"), this))
     , prefixEdit(new QLineEdit(this))
     , suffixLabel(new QLabel(tr("add suffix"), this))
@@ -58,7 +59,6 @@ WorkWidget::WorkWidget(QWidget *parent)
     btnMap[Action::AllUpper] = allUpper;
     btnMap[Action::FirstUpper] = firstUpper;
     btnMap[Action::AddUnderline] = addUnderline;
-    btnMap[Action::UnderlineTolerate] = underlineTolerate;
 
     validator = new QRegExpValidator(regExp, this);
     inputEdit->setValidator(validator);
@@ -126,7 +126,6 @@ WorkWidget::WorkWidget(QWidget *parent)
 
     auto fixLayout = new QVBoxLayout;
     fixLayout->addStretch(1);
-    fixLayout->addWidget(underlineTolerate);
     fixLayout->addLayout(prefixLayout);
     fixLayout->addLayout(suffix);
     fixLayout->addWidget(generateButton);
@@ -157,6 +156,7 @@ WorkWidget::WorkWidget(QWidget *parent)
                     QApplication::clipboard()->setText(item->text());
                 }
             });
+    QtConcurrent::run(&wordNinga, &WordNinga::Init);
 }
 
 WorkWidget::~WorkWidget()
@@ -165,6 +165,7 @@ WorkWidget::~WorkWidget()
 
 void WorkWidget::Execute()
 {
+    QMutexLocker locker(&mutex);
     GetKey();
     switch (group->checkedId())
     {
@@ -282,7 +283,7 @@ void WorkWidget::GetKey()
         for (auto i = 0; i < inputEditArea->document()->lineCount(); ++i)
         {
             QString text = inputEditArea->document()->findBlockByLineNumber(i).text();
-            keyVec.push_back(SeparateKey(text));
+            keyVec.push_back(wordNinga.split(text));
         }
         return;
     }
@@ -292,36 +293,7 @@ void WorkWidget::GetKey()
     }
     keyVec.clear();
     QString text = inputEdit->text();
-    keyVec.push_back(SeparateKey(text));
-}
-
-inline QVector<QString> WorkWidget::SeparateKey(const QString &text)
-{
-    QVector<QString> lineVec;
-
-    int start = 0;
-    int step = 0;
-    QRegExp exp("[A-Z_\\s]");
-    while (step != -1)
-    {
-        step = exp.indexIn(text, start == 0?start:start + 1);
-        QString key;
-        if (underlineTolerate->isChecked())
-        {
-            key = text.mid(start, step == -1 ? -1 : step - start).simplified();
-        }
-        else
-        {
-            key = text.mid(start, step == -1 ? -1 : step - start).simplified().remove('_');
-        }
-        start = step;
-        if (key.isEmpty())
-        {
-            continue;
-        }
-        lineVec.push_back(key);
-    }
-    return lineVec;
+    keyVec.push_back(wordNinga.split(text));
 }
 
 void WorkWidget::UpperKey()
@@ -511,7 +483,7 @@ void WorkWidget::AddPrefixAndSuffix(QString &str)
     }
 }
 
-inline void WorkWidget::SetResult(const QStringList &str)
+void WorkWidget::SetResult(const QStringList &str)
 {
     if (str.isEmpty())
     {

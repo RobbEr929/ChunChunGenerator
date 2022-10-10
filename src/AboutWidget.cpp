@@ -63,7 +63,7 @@ AboutWidget::AboutWidget(QWidget *parent)
     : QWidget(parent)
     , iconLabel(new QLabel(this))
     , nameLabel(new QLabel(tr("ChunChunGenerator"), this))
-    , versionLabel(new QLabel(tr("Version") % " V 0.0.3", this))
+    , versionLabel(new QLabel(tr("Version") % " V 0.0.5", this))
     , copyRightLabel(new QLabel(this))
     , helpLabel(new HelpLabel(tr("get help"), this))
 {
@@ -76,7 +76,7 @@ AboutWidget::AboutWidget(QWidget *parent)
     QString copyRightStr = "Copyright" % QString::fromUtf16(s) % " 2022 " % "ZhongChun. All rights reserved.";
     copyRightLabel->setText(QString("<a href = %1>%2</a>").arg("\"https://robber.ltd/\"").arg(copyRightStr));
 
-    helpLabel->SetLocalUrl("QApplication::applicationDirPath()" % tr("/../ReadMe.md"));
+    helpLabel->SetLocalUrl(QApplication::applicationDirPath() % tr("/../ReadMe.md"));
     helpLabel->SetNetWorkUrl(tr("https://robber.ltd/2022/09/04/chunchungenerator-help/"));
 
     auto hBoxLayout = new QHBoxLayout;

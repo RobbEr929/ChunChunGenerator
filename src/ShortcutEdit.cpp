@@ -12,13 +12,14 @@
 #include "MainWindow.h"
 #include "ShortcutKeysManager.h"
 
-ShortcutEdit::ShortcutEdit(Action act, QWidget *parent)
+ShortcutEdit::ShortcutEdit(Action act, QWidget* parent)
     : QLineEdit(parent)
+    , action(act)
     , nowKey(nullptr)
 {
+    setReadOnly(true);
     setProperty("Action", static_cast<qint8>(act));
     setObjectName(ActionToStr(act) % "Edit");
-    setReadOnly(true);
 }
 
 ShortcutEdit::~ShortcutEdit()
@@ -29,12 +30,17 @@ bool ShortcutEdit::RegiserKey(QString key)
 {
     QKeySequence keySequence(key);
     nowKey = ShortcutKeysManager::RegisterKey(this, &keySequence);
-    SetText();
     if (nowKey != nullptr)
     {
+        SetText();
         return true;
     }
     return false;
+}
+
+Action ShortcutEdit::GetAction() const
+{
+    return action;
 }
 
 void ShortcutEdit::focusInEvent(QFocusEvent *event)

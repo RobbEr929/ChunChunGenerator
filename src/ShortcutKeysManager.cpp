@@ -74,7 +74,8 @@ QPair<qint32, qint32> *ShortcutKeysManager::RegisterKey(ShortcutEdit *edit, QPai
     GetInstance()->actionMap[action] = hotkey;
     GetInstance()->editMap[action] = edit;
     GetInstance()->keyMap.insert(action, qMakePair(key->first, key->second));
-    emit GetInstance()->KeyBind(action, hotkey);
+    connect(hotkey, &QHotkey::activated, MainWindow::GetInstance(), MainWindow::GetInstance()->SlotFunction(edit->GetAction()));
+
     return new QPair<int, int>(key->first, key->second);
 }
 
@@ -115,7 +116,7 @@ QPair<qint32, qint32> *ShortcutKeysManager::RegisterKey(ShortcutEdit *edit, QKey
     GetInstance()->actionMap[action] = hotkey;
     GetInstance()->editMap[action] = edit;
     GetInstance()->keyMap.insert(action, qMakePair(hotkey->modifiers(), hotkey->keyCode()));
-    emit GetInstance()->KeyBind(action, hotkey);
+    connect(hotkey, &QHotkey::activated, MainWindow::GetInstance(), MainWindow::GetInstance()->SlotFunction(edit->GetAction()));
 
     return new QPair<int, int>(hotkey->modifiers(), hotkey->keyCode());
 }

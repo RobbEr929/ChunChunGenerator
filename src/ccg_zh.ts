@@ -117,6 +117,30 @@
         <source>About</source>
         <translation>关于</translation>
     </message>
+    <message>
+        <source>add word to dictionary success</source>
+        <translation>添加单词到字典成功</translation>
+    </message>
+    <message>
+        <source>failed to find dictionary file, please ensure the &apos;wordninga.txt&apos; exist</source>
+        <translation>找不到字典文件，请确保&apos;wordninga.txt&apos;存在</translation>
+    </message>
+    <message>
+        <source>the word already contains</source>
+        <translation>单词已经存在</translation>
+    </message>
+    <message>
+        <source>input word empty</source>
+        <translation>输入为空</translation>
+    </message>
+    <message>
+        <source>remove word from dictionary success</source>
+        <translation>从字典移除单词成功</translation>
+    </message>
+    <message>
+        <source>the word does not exist in dictionary</source>
+        <translation>字典中无该单词</translation>
+    </message>
 </context>
 <context>
     <name>OptionWidget</name>
@@ -222,7 +246,7 @@
     </message>
     <message>
         <source>UnderlineTolerate</source>
-        <translation>下划线容许</translation>
+        <translation type="vanished">下划线容许</translation>
     </message>
     <message>
         <source>generate</source>
@@ -259,6 +283,34 @@
     <message>
         <source>global shortcut keys, works any where</source>
         <translation>全局快捷键，任何地方有效</translation>
+    </message>
+    <message>
+        <source>enable dictionary segmentation</source>
+        <translation>开启字典分词</translation>
+    </message>
+    <message>
+        <source>add word to dictionary</source>
+        <translation>添加单词到字典</translation>
+    </message>
+    <message>
+        <source>add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <source>remove word to dictionary</source>
+        <translation>从字典中删除单词</translation>
+    </message>
+    <message>
+        <source>remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>word segmentation</source>
+        <translation>单词分词</translation>
+    </message>
+    <message>
+        <source>use the dictionary for word segmentation when on. use simple word segmentation when off.</source>
+        <translation>开启时使用字典分词，关闭则使用简单分词</translation>
     </message>
 </context>
 <context>
@@ -327,7 +379,7 @@
     </message>
     <message>
         <source>UnderlineTolerate</source>
-        <translation>下划线容许</translation>
+        <translation type="vanished">下划线容许</translation>
     </message>
     <message>
         <source>add prefix</source>

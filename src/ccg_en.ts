@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>/../ReadMe.md</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -109,6 +109,30 @@
         <source>About</source>
         <translation></translation>
     </message>
+    <message>
+        <source>add word to dictionary success</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>failed to find dictionary file, please ensure the &apos;wordninga.txt&apos; exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the word already contains</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>input word empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>remove word from dictionary success</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the word does not exist in dictionary</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionWidget</name>
@@ -189,10 +213,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>UnderlineTolerate</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>generate</source>
         <translation></translation>
     </message>
@@ -215,6 +235,34 @@
     <message>
         <source>global shortcut keys, works any where</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>enable dictionary segmentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>add word to dictionary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>remove word to dictionary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>word segmentation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>use the dictionary for word segmentation when on. use simple word segmentation when off.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -259,10 +307,6 @@
     </message>
     <message>
         <source>First upper</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>UnderlineTolerate</source>
         <translation></translation>
     </message>
     <message>

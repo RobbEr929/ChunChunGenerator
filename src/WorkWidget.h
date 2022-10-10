@@ -21,9 +21,11 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QListWidget>
+#include <QMutex>
 #include <QRadioButton>
 
 #include "def.h"
+#include "wordninga.h"
 
 class WorkWidget final
     : public QWidget
@@ -46,8 +48,6 @@ private:
 
     void GetKey();
 
-    inline QVector<QString> SeparateKey(const QString &text);
-
     void UpperKey();
 
     void LowerKey();
@@ -62,14 +62,15 @@ private:
 
     void DoNothing();
 
-    inline QString UpperOne(const QString &str);
+    QString UpperOne(const QString &str);
 
-    inline void AddPrefixAndSuffix(QString &str);
+    void AddPrefixAndSuffix(QString &str);
 
     void SetResult(const QStringList &str);
 
     void SetLayoutVisible(QLayout *layout, bool visible);
 
+    QMutex mutex;
     QHBoxLayout *hBoxLayout1;
     QHBoxLayout *hBoxLayout2;
     QHBoxLayout *hBoxLayout3;
@@ -91,7 +92,6 @@ private:
     QRadioButton *allLower;
     QRadioButton *firstUpper;
     QPushButton *generateButton;
-    QCheckBox *underlineTolerate;
     QLabel *prefixLabel;
     QLineEdit *prefixEdit;
     QLabel *suffixLabel;
@@ -107,6 +107,7 @@ private:
     bool isFocus;
     friend class MainWindow;
     QMap<Action, QAbstractButton*> btnMap;
+    WordNinga wordNinga;
 };
 
 #endif // CCG_WORKWIDGET_H

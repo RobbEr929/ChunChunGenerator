@@ -13,7 +13,7 @@
 #include <QCheckBox>
 #include <QTabWidget>
 #include <QScrollArea>
-#include <QRadioButton>
+#include <QPushButton>
 
 #include "def.h"
 #include "ConfigReader.h"
@@ -39,6 +39,8 @@ private:
 
     QWidget *InitShortcutWidget();
 
+    QWidget *InitDictionaryWidget();
+
     QTabWidget *optionTabWidget;
     QCheckBox *pasteWhenGetFocusBox;
     QCheckBox *copyWhenWorkOverBox;
@@ -47,9 +49,15 @@ private:
     QCheckBox *multilineInput;
     QCheckBox *copyWhenClickBox;
     QScrollArea *shortcutArea;
-    TitleWidget * defocusWidget,*themeWidget, *languageWidget, *localWidget, *lccWdiget, *uccWidget, *alWidget, *auWdiget, *fuWidget, *
-                aulWidget
-                , *ultWidget, *globalWidget, *gWdiget, *dWidget, *qWidget;
+    TitleWidget* defocusWidget, * themeWidget, * languageWidget, * localWidget, * lccWdiget, * uccWidget, * alWidget, * auWdiget, * fuWidget,
+        * aulWidget, * globalWidget, * gWdiget, * dWidget, * qWidget;
+    QCheckBox* useDictionaryBox;
+    QLabel* awtdLabel;
+    QLineEdit* awtdEdit;
+    QPushButton* awtdButton;
+    QLabel* rwtdLabel;
+    QLineEdit* rwtdEdit;
+    QPushButton* rwtdButton;
     ConfigReader *configReader;
     friend class MainWindow;
 };

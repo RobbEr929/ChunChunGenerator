@@ -25,6 +25,7 @@ public:
 
     bool RegiserKey(QString key);
 
+    Action GetAction()const;
 protected:
     void focusInEvent(QFocusEvent *event) override;
 
@@ -39,6 +40,7 @@ private:
 
     QPair<qint32, qint32> *inputKey;
     QPair<qint32, qint32> *nowKey;
+    Action action;
 };
 
 #endif // SHORTCUTEDIT_H

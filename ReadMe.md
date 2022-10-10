@@ -1,11 +1,19 @@
-﻿﻿﻿## Overview
+﻿## Overview
+
 A small tool based on Qt for implementing named camel case conversion.
 The project is built based on Qt5.12.10_msvc2017_64 + VS2022
 
 ## Version
+
+### V0.0.6
+
+**Todo**: Update comments; Integrated into vs expansion;
+
 ### V 0.0.5
 
-**Todo**: update code notes
+1. Fix the program stuck bug caused by word segmentation;
+
+2. New option interface word segmentation page, you can select word segmentation algorithm and operation dictionary (Supported by [wordninja](https://github.com/keredson/wordninja), MIT LICENSE), the code has been improved and adapted according to Qt and the project;
 
 ### V 0.0.4
 

@@ -15,6 +15,8 @@ TitleWidget::TitleWidget(QString title, QWidget *object, QWidget *parent)
     , widget(object)
 {
     widget->setParent(this);
+    titleLabel->installEventFilter(this);
+    widget->installEventFilter(this);
 
     hBoxLayout->addStretch(1);
     hBoxLayout->addWidget(titleLabel);

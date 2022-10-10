@@ -1,13 +1,19 @@
-﻿﻿﻿﻿﻿﻿﻿﻿## 概述
+﻿## 概述
+
 基于Qt制作的小工具，用于实现命名的驼峰转换。
 
 项目基于Qt5.12.10_msvc2017_64 + VS2022 构建
 
 ## 版本
 
+### v0.0.6
+
+**Todo**: 更新注释；集成到vs拓展中；
+
 ### V 0.0.5
 
-**Todo**: 更新注释
+1. 修复由于分词导致的程序卡死bug；
+2. 新增选项界面分词页，可以选择分词算法及操作词典(Supported by [wordninja](https://github.com/keredson/wordninja), MIT LICENSE)，代码已根据Qt及项目进行改良适配；
 
 ### V 0.0.4
 
@@ -20,7 +26,7 @@
 7. `虚焦渐隐`: 当鼠标不在软件内，软件半透明，可自行设置透明度；
 8. `多主题支持`: 包含明亮与黑暗两个主题(Supported by [QDarkStyleSheet](https://github.com/ColinDuquesnoy/QDarkStyleSheet), MIT LICENSE)；
 9. `多语言支持`: 目前支持简体中文与英文；
-10. `快捷键绑定`: 所有操作都可绑定快捷键，切下次使用时可用(Supported by [QHotkey](https://github.com/Skycoder42/QHotkey), BSD LICENSE)；
+10. `快捷键绑定`: 所有操作都可绑定快捷键，且下次使用时可用(Supported by [QHotkey](https://github.com/Skycoder42/QHotkey), BSD LICENSE)；
 10. `更新帮助` : 当本地文件存在时，查看本地帮助，不存在则使用浏览器查看网络帮助；
 
 ## 使用

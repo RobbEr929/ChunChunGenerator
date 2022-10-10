@@ -57,6 +57,15 @@ MainWindow::~MainWindow()
 {
 }
 
+std::function<void()> MainWindow::SlotFunction(Action act)
+{
+    if(slotFunction.contains(act))
+    {
+        return slotFunction[act];
+    }
+    return [](){};
+}
+
 MainWindow *&MainWindow::GetInstance()
 {
     return mainWindow;
@@ -323,8 +332,7 @@ bool MainWindow::InitConnect()
                 {
                     QMessageBox box(QMessageBox::Information,
                                     tr("Confirm to modify the language?"),
-                                    tr(
-                                        "Confirm to modify the language? After modification, it will restart automatically"),
+                                    tr( "Confirm to modify the language? After modification, it will restart automatically"),
                                     QMessageBox::Yes | QMessageBox::No);
                     box.setButtonText(QMessageBox::Yes, tr("Yes"));
                     box.setButtonText(QMessageBox::No, tr("No"));
@@ -338,164 +346,133 @@ bool MainWindow::InitConnect()
                 }
             });
 
-    connect(ShortcutKeysManager::GetInstance(),
-            &ShortcutKeysManager::KeyBind,
-            this,
-            [this](Action action, QHotkey *key)
+    connect(optionWidget->useDictionaryBox,
+        &QCheckBox::stateChanged,
+        this,
+        [this](int index)
+        {
+            workWidget->wordNinga.SetUseDigit(index);
+            optionWidget->awtdButton->setEnabled(index);
+            optionWidget->rwtdButton->setEnabled(index);
+        });
+
+    connect(optionWidget->awtdButton,
+        &QPushButton::clicked ,
+        this,
+        [this]()
+        {
+            switch(workWidget->wordNinga.AddWordToDigit(optionWidget->awtdEdit->text()))
             {
-                switch (action)
-                {
-                case Action::Generate:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    QString text = QApplication::clipboard()->text();
-                                    if (workWidget->validator->regExp().exactMatch(text))
-                                    {
-                                        workWidget->inputEdit->setText(text);
-                                        workWidget->Execute();
-                                    }
-                                });
-                        break;
-                    }
-                case Action::DisplayOrNot:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (isVisible())
-                                    {
-                                        hide();
-                                        return;
-                                    }
-                                    Show();
-                                });
-                        break;
-                    }
-                case Action::Quit:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    qApp->exit(0);
-                                });
-                        break;
-                    }
-                case Action::UNKNOWN:
-                    {
-                        break;
-                    }
-                case Action::LowerCamelCase:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->lowerCamelCase->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::UpperCamelCase:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->upperCamelCase->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::AllLower:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->allLower->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::AllUpper:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->allUpper->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::FirstUpper:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->firstUpper->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::AddUnderline:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->addUnderline->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                case Action::UnderlineTolerate:
-                    {
-                        connect(key,
-                                &QHotkey::activated,
-                                this,
-                                [this]
-                                {
-                                    if (workWidget->hasFocus())
-                                    {
-                                        workWidget->underlineTolerate->setChecked(true);
-                                    }
-                                });
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-                }
-            });
+            case 0:
+                InfoDialog::Show(this, 2000, tr("add word to dictionary success"));
+                break;
+            case 1:
+                InfoDialog::Show(this, 2000, tr("failed to find dictionary file, please ensure the \'wordninga.txt\' exist"));
+                break;
+            case 2:
+                InfoDialog::Show(this, 2000, tr("the word already contains"));
+                break;
+            case 3:
+                InfoDialog::Show(this, 2000, tr("input word empty"));
+                break;
+            }
+        });
+
+    connect(optionWidget->rwtdButton,
+        &QPushButton::clicked,
+        this,
+        [this]()
+        {
+            switch(workWidget->wordNinga.RemoveWordToDigit(optionWidget->rwtdEdit->text()))
+            {
+            case 0:
+                InfoDialog::Show(this, 2000, tr("remove word from dictionary success"));
+                break;
+            case 1:
+                InfoDialog::Show(this, 2000, tr("failed to find dictionary file, please ensure the \'wordninga.txt\' exist"));
+                break;
+            case 2:
+                InfoDialog::Show(this, 2000, tr("the word does not exist in dictionary"));
+                break;
+            case 3:
+                InfoDialog::Show(this, 2000, tr("input word empty"));
+                break;
+            }
+        });
+
+    slotFunction[Action::Generate] = [this]
+    {
+        QString text = QApplication::clipboard()->text();
+        if (workWidget->validator->regExp().exactMatch(text))
+        {
+            workWidget->inputEdit->setText(text);
+            workWidget->Execute();
+        }
+    };
+
+    slotFunction[Action::DisplayOrNot] = [this]
+    {
+        if (isVisible())
+        {
+            hide();
+            return;
+        }
+        Show();
+    };
+
+    slotFunction[Action::Quit] = [this] 
+    {
+        qApp->exit(0);
+    };
+
+    slotFunction[Action::LowerCamelCase] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->lowerCamelCase->setChecked(true);
+        }
+    };
+
+    slotFunction[Action::UpperCamelCase] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->upperCamelCase->setChecked(true);
+        }
+    };
+
+    slotFunction[Action::AllLower] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->allLower->setChecked(true);
+        }
+    };
+
+    slotFunction[Action::AllUpper] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->allUpper->setChecked(true);
+        }
+    };
+
+    slotFunction[Action::FirstUpper] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->firstUpper->setChecked(true);
+        }
+    };
+
+    slotFunction[Action::AddUnderline] = [this]
+    {
+        if (workWidget->hasFocus())
+        {
+            workWidget->addUnderline->setChecked(true);
+        }
+    };
+
     return true;
 }
 

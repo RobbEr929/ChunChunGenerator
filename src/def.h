@@ -46,7 +46,6 @@ enum class Action : qint8
     AllUpper,
     FirstUpper,
     AddUnderline,
-    UnderlineTolerate,
     Generate,
     DisplayOrNot,
     Quit,
@@ -68,8 +67,6 @@ inline QString ActionToStr(Action action)
         return "FirstUpper";
     case Action::AddUnderline:
         return "AddUnderline";
-    case Action::UnderlineTolerate:
-        return "UnderlineTolerate";
     case Action::Generate:
         return "Generate";
     case Action::DisplayOrNot:

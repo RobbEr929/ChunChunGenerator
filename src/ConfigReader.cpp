@@ -54,7 +54,6 @@ void ConfigReader::InitMap()
     objectMap["AllUpperEdit"] = "";
     objectMap["FirstUpperEdit"] = "";
     objectMap["AddUnderlineEdit"] = "";
-    objectMap["UnderlineTolerateEdit"] = "";
     objectMap["GenerateEdit"] = "";
     objectMap["DisplayOrNotEdit"] = "";
     objectMap["QuitEdit"] = "";
